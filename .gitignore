@@ -4,3 +4,4 @@ extracted
 collections
 aliases
 .deleted
+__pycache__/

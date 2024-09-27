@@ -10,22 +10,20 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 
 
-
 from dotenv import load_dotenv
 load_dotenv()
 
-llm = ChatGroq(model="llama3-70b-8192")
+llm = ChatGroq(model="llama-3.1-70b-versatile")
 
-
-system = """You are provided with a chunk of text from a scientific article about insomnia, along with the title and the high-level summary (or abstract) of the article for additional context. Your task is to create a concise, informative, and detailed summary of the chunk, capturing its main points, explanations, and any significant findings. Utilize the title and high-level summary to frame the chunk in the broader context of the article, ensuring that the summary reflects the relevance and significance of the content.
+system = """Given the following chunk of text from a scientific article about insomnia, which includes the title and a high level summary of the article, generate a detailed summary of the content. The summary should capture key information and provide enough detail to distinguish this chunk from others in the document. Avoid including excessive numbers or specific details from tables. Instead, capture the main points or conclusions derived from the data.
 Instructions:
-- Base the summary primarily on the chunk of text, but use the title and high-level summary for better context.
-- Include important details, findings, and explanations, but avoid unnecessary citations or excessive numbers unless critical.
-- The summary should be detailed, clear, and informative, highlighting the key ideas without losing depth.
-- Provide the summary in as much detail as possible.
-- Your response should only be the summary and nothing else.
+- Create a detailed summary of the chunk, utilizing the title and high-level summary for better context.
+- Summarize the main points, specific findings, or arguments present in the chunk, but avoid excessive numeric data.
+- Do not include any external information or analysis beyond what is provided in the chunk.
+- Focus on distinguishing this chunk from other parts of the document by highlighting unique details.
+- The output should contain only the detailed summary, nothing else.
 
-Chunk of Text:
+Input:
 {chunk_of_text}
 
 Your Summary:
@@ -36,8 +34,6 @@ prompt = ChatPromptTemplate.from_messages([
 ])
 
 summary_chain = prompt | llm | StrOutputParser()
-
-
 
 #Create chunks using RecursiveTextSplitter
 def create_chunks_from_directory(dir):
