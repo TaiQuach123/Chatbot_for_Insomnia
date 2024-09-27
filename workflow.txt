@@ -1,0 +1,3 @@
+Agent to determine if a query is complex -> decompose it, otherwise create different versions of it
+Integrate Memory, Search
+Generate synthetic dataset for evaluate
