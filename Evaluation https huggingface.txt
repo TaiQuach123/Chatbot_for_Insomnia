@@ -1,0 +1,12 @@
+Evaluation
+https://huggingface.co/learn/cookbook/rag_evaluation
+- Building a synthetic evaluation dataset using LLM-as-a-judge
+	- Generate questions and associated contexts (passing each PDF, ask LLM to generate questions and related contexts from that PDF)
+	- Another LLM will act as quality filters to those generated QA couples based on: 
+		- Groundedness: question should be answered from given context
+		- Relevance: the question should be relevant to users
+	- A judge agent will then evaluate the performance of RAG system with the synthetic dataset
+
+
+https://docs.ragas.io/en/latest/
+
