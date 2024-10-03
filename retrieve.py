@@ -104,5 +104,6 @@ if query:
     st.write(response)
     with st.expander("Document Similarity Search"):
         for i, doc in enumerate(relevant_docs):
-            st.write(doc.metadata['source'] +  '|----------------|' + doc.metadata['title'] + '|----------------|' + doc.page_content)
+            st.write(doc.metadata['source'] +  '||====================||' + doc.metadata['title'] + '||====================||' + doc.page_content)
+            st.write('-'*100)
             st.write('-'*100)

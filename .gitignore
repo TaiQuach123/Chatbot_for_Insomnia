@@ -5,3 +5,4 @@ collections
 aliases
 .deleted
 __pycache__/
+raft_state.json
