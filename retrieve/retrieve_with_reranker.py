@@ -1,36 +1,9 @@
 from qdrant_client import QdrantClient, models
-from FlagEmbedding import BGEM3FlagModel, FlagReranker
-from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
 from langchain_core.documents import Document
-from utils.utils import convert_defaultdict, format_docs
+from utils.utils import convert_defaultdict
 import numpy as np
 
-from dotenv import load_dotenv
-import streamlit as st
 
-load_dotenv()
-
-if 'client' not in st.session_state:
-    st.session_state.client = QdrantClient("http://localhost:6333")
-if 'embeddings' not in st.session_state:
-    st.session_state.embeddings = BGEM3FlagModel('BAAI/bge-m3', use_fp16=True)
-if 'reranker' not in st.session_state:
-    st.session_state.reranker = FlagReranker('BAAI/bge-reranker-v2-m3', use_fp16=True)
-if 'llm' not in st.session_state:
-    st.session_state.llm = ChatGroq(model="llama3-70b-8192")
-
-
-prompt = ChatPromptTemplate.from_template("""Answer the question based on the provided context only. Try your best to provide the most accurate response.
-<context>
-{context}
-</context>
-
-Question: {input}
-""")
-
-chain = prompt | st.session_state.llm | StrOutputParser()
 
 
 
@@ -85,18 +58,3 @@ def retrieve_with_reranker(query, embeddings, reranker, client):
         relevant_docs.append(res_doc)
     
     return relevant_docs
-
-st.title("Demo")
-
-
-query = st.text_input("Enter Your Query")
-if query:
-    relevant_docs = retrieve_with_reranker(query, embeddings=st.session_state.embeddings, reranker=st.session_state.reranker, client=st.session_state.client)
-    context = format_docs(relevant_docs[:3])
-
-    response = chain.invoke({"context": context, "input": query})
-    st.write(response)
-    with st.expander("Document Similarity Search"):
-        for i, doc in enumerate(relevant_docs[:3]):
-            st.write(doc.metadata['source'] + '-'*20 + doc.metadata['title'] + '-'*20 + doc.page_content)
-            st.write('-'*70)
