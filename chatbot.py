@@ -26,7 +26,7 @@ if 'client' not in st.session_state:
 if 'embeddings' not in st.session_state:
     st.session_state.embeddings = BGEM3FlagModel('BAAI/bge-m3', use_fp16=True)
 if 'llm' not in st.session_state:
-    st.session_state.llm = ChatGroq(model="llama3-70b-8192", temperature=0)
+    st.session_state.llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0)
 if 'store' not in st.session_state:
     st.session_state.store = {}
 
@@ -72,7 +72,7 @@ if query:
     else:
         history = st.session_state.store[session_id].messages
     
-    reformulate_query = reformulate_chain.invoke({"messages": history + [HumanMessage(query)]})
+    reformulate_query = reformulate_chain.invoke({"messages": history, "query": query})
     print("Reformulate Query:")
     print(reformulate_query)
     print('-'*50)

@@ -6,7 +6,8 @@ system_reformulate_prompt = """Using the provided chat history (if available) an
 
 reformulate_prompt = ChatPromptTemplate.from_messages([
     ("system", system_reformulate_prompt),
-    MessagesPlaceholder("messages")
+    MessagesPlaceholder("messages"),
+    ("human", "Question to rephrasing: {query}")
 ])
 
 system_prompt = """You are an AI chatbot designed to answer questions about insomnia using context retrieved from scientific articles. Your goal is to provide clear, evidence-based responses and practical advice to help users. Following those instructions:

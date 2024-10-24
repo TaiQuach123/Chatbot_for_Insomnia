@@ -26,37 +26,13 @@ if 'client' not in st.session_state:
 if 'embeddings' not in st.session_state:
     st.session_state.embeddings = BGEM3FlagModel('BAAI/bge-m3', use_fp16=True)
 if 'llm' not in st.session_state:
-    st.session_state.llm = ChatGroq(model="llama3-70b-8192", temperature=0)
+    st.session_state.llm = ChatGroq(model="llama-3.1-70b-versatile", temperature=0)
 if 'store' not in st.session_state:
     st.session_state.store = {}
 
 session_id = "first_chat"
 config = {"configurable": {"session_id": session_id}}
 
-
-#system_reformulate_prompt = """Using the provided chat history (if available) and the most recent user question, reformulate the question into a standalone version that is understandable without the context of the chat history. Do not answer or provide any information beyond rephrasing. If rephrasing is unnecessary, return the original question exactly as it is. Your response must only be the reformulated or original question."""
-
-#reformulate_prompt = ChatPromptTemplate.from_messages([
-#    ("system", system_reformulate_prompt),
-#    MessagesPlaceholder("messages")
-#])
-
-#system_prompt = """You are an AI chatbot designed to answer questions about insomnia using context retrieved from scientific articles. Your goal is to provide clear, evidence-based responses and practical advice to help users. Following those instructions:
-
-#1. Use only the information provided with the <context> tags regarding insomnia.
-#2. Provide concise, informative answers.
-#3. If a question is unclear or needs more context, ask the user for clarification.
-
-#<context>
-#{context}
-#</context>
-#"""
-
-#prompt = ChatPromptTemplate.from_messages([
-#    ("system", system_prompt),
-#    MessagesPlaceholder("messages"),
-#    ("human", "{query}")
-#])
 
 
 reformulate_chain = reformulate_prompt | st.session_state.llm | StrOutputParser()
@@ -72,7 +48,7 @@ if query:
     else:
         history = st.session_state.store[session_id].messages
     
-    reformulate_query = reformulate_chain.invoke({"messages": history + [HumanMessage(query)]})
+    reformulate_query = reformulate_chain.invoke({"messages": history, "query": query})
     print("Reformulate Query:")
     print(reformulate_query)
     print('-'*50)
@@ -89,4 +65,4 @@ if query:
             st.write('-'*75)
             st.write('-'*75)
 
-    #print(st.session_state.store[session_id].messages)
+    print(st.session_state.store[session_id].messages)
