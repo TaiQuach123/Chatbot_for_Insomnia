@@ -72,7 +72,7 @@ if query:
     else:
         history = st.session_state.store[session_id].messages
     
-    reformulate_query = reformulate_chain.invoke({"messages": history + [HumanMessage(query)]})
+    reformulate_query = reformulate_chain.invoke({"messages": history, "query": query})
     print("Reformulate Query:")
     print(reformulate_query)
     print('-'*50)
